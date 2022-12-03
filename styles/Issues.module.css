@@ -1,0 +1,50 @@
+/* General */
+.hidden {
+  display: none;
+}
+.no-select {
+  user-select: none;
+}
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+.flex-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 10px;
+  column-gap: 10px;
+}
+
+/* Areas */
+.form {
+  margin: 10px 0;
+}
+.fieldset {
+  border: none;
+  margin: 10px 0;
+}
+
+/* Components */
+.title {
+  margin: 10px 0;
+}
+.filters-title {
+  text-align: left;
+  margin-top: 10px;
+}
+.issue-filter,
+.label {
+  width: 120px;
+}
+.label {
+  margin: 10px 10px 0 0;
+}
+.form > input,
+.form > textarea,
+.form > select,
+.form > button {
+  margin: 3px;
+  padding: 2px;
+  width: 250px;
+}
