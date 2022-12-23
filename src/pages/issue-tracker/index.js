@@ -1,14 +1,14 @@
 import React from 'react'
 import Header from '../../components/header'
-import MetricImperial from '../../components/metric'
+import Issue from '../../components/issue'
 import Footer from '../../components/footer'
 
-export default function MetricImperialPage() {
+export default function IssuesPage() {
   return (
     <>
-      <Header currentPath='/metric-imperial' />
+      <Header currentPath='/issue-tracker' />
       <hr />
-      <MetricImperial />
+      <Issue />
       <hr />
       <Footer />
     </>

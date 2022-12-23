@@ -5,6 +5,11 @@
 .no-select {
   user-select: none;
 }
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
 .flex-column {
   display: flex;
   flex-direction: column;
@@ -23,6 +28,10 @@
 .fieldset {
   border: none;
   margin: 10px 0;
+}
+.submit-project {
+  padding-bottom: 5px;
+  border-bottom: 1px solid black;
 }
 
 /* Components */
@@ -47,4 +56,7 @@
   margin: 3px;
   padding: 2px;
   width: 250px;
+}
+.submit-project input {
+  width: 200px;
 }
