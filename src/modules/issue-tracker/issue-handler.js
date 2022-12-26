@@ -198,6 +198,7 @@ export default class IssueHandler {
         optional: ['text', 'assigned_to', 'status_text'],
       }
     let postResult
+    sanitize(project)
 
     if (!objHasProps(project, projectProps)) return
 
@@ -225,6 +226,8 @@ export default class IssueHandler {
   static async updateIssue(req, res) {
     const { body, query } = req,
       issue = JSON.parse(body)
+    sanitize(issue)
+    sanitize(query)
     let patchResult
 
     for (const prop of ['created_by', 'created_on', 'last_updated'])
@@ -249,15 +252,15 @@ export default class IssueHandler {
    * @param {object} req The Express request object.
    * @param {object} res The Express response object.
    */
-  static async delete(req, res) {
-    const {
-        query,
-        params: { project },
-      } = req,
-      index = +query.index,
-      deleteResult = await IssuesDAO.deleteIssue(project, index)
+  static async deleteIssue(req, res) {
+    const { index, project } = req.query
+    if (!this.#validateIndex(index))
+      return res
+        .status(400)
+        .json({ error: 'please provide a whole number index' })
 
-    return res.status(deleteResult?.error ? 500 : 200).json(deleteResult)
+    const deleteResult = await IssuesDAO.deleteIssue(sanitize(project), +index)
+    res.status(deleteResult?.error ? 500 : 200).json(deleteResult)
   }
 
   /**
@@ -274,5 +277,16 @@ export default class IssueHandler {
     issue.last_updated = today
 
     return issue
+  }
+
+  /**
+   * @description Matches index against a numeric character index.
+   * @param {number|string} index
+   * @returns {boolean}
+   */
+  static #validateIndex(index) {
+    if (typeof index !== 'number' && typeof index !== 'string') return false
+
+    return /^\d+$/.test(`${index}`)
   }
 }

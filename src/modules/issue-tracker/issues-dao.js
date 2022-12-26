@@ -171,62 +171,50 @@ export default class IssuesDAO {
   }
 
   /**
-   * @description Deletes a single issue from a project using its index
+   * @description Deletes the issue at the given index from a project.
    * @param {string} project The name of the project that the issue pertains to.
    * @param {number} index The index of the issue to delete.
-   * @returns {Promise<object | null>} The result of the update operaton.
+   * @returns {Promise<object | null>} The result of the operaton.
    */
   static async deleteIssue(project, index) {
     if (!DB) await this.connect()
 
-    const skipFirstIssuePipeline = [
-        {
-          $replaceWith: {
-            $setField: {
-              field: 'issues',
-              input: '$$ROOT',
-              value: {
-                $cond: [
-                  { $eq: [{ $size: '$issues' }, 0] },
-                  [],
-                  {
-                    $slice: ['$issues', 0, { $size: '$issues' }],
-                  },
-                ],
+    const deleteIssuePipeline = [
+      {
+        $replaceWith: {
+          $setField: {
+            field: 'issues',
+            input: '$$ROOT',
+            value: {
+              $cond: {
+                if: { $eq: [{ $size: '$issues' }, 0] },
+                then: [],
+                else:
+                  index === 0
+                    ? {
+                        $slice: ['$issues', 1, { $size: '$issues' }],
+                      }
+                    : {
+                        $concatArrays: [
+                          { $slice: ['$issues', 0, index] },
+                          {
+                            $slice: [
+                              '$issues',
+                              index + 1,
+                              { $size: '$issues' },
+                            ],
+                          },
+                        ],
+                      },
               },
             },
           },
         },
-      ],
-      // Following pipeline can only run if the index argument is greater than 0.
-      skipMiddleIssuePipeline = [
-        {
-          $replaceWith: {
-            $setField: {
-              field: 'issues',
-              input: '$$ROOT',
-              value: {
-                $cond: [
-                  { $eq: [{ $size: '$issues' }, 0] },
-                  [],
-                  {
-                    $concatArrays: [
-                      { $slice: ['$issues', 0, index] },
-                      { $slice: ['$issues', index + 1, { $size: '$issues' }] },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
-        },
-      ]
+      },
+    ]
 
     try {
-      const deleteResult = await DB.updateOne(
-        { project },
-        index === 0 ? skipFirstIssuePipeline : skipMiddleIssuePipeline
-      )
+      const deleteResult = await DB.updateOne({ project }, deleteIssuePipeline)
 
       return deleteResult
     } catch (err) {

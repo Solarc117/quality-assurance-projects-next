@@ -75,14 +75,17 @@ export default function Issue() {
     event.preventDefault()
     setData(JSON.stringify({ message: 'fetching issue to update...' }, null, 2))
 
-    // @ts-ignore
-    const formChildren = issueIndexForm.current.children,
-      { value: projectName } = formChildren[0],
-      { value: index } = formChildren[2],
-      apiEndpoint = `/api/issues/${encodeURIComponent(
-        projectName.trim()
-      )}?index=${index}`,
-      response = await fetch(apiEndpoint),
+    const [projectName, index] = Array.from(
+        // @ts-ignore
+        updateIssueFieldset.current.children
+      ).map(labelNode => labelNode.childNodes[2].value),
+      apiEndpoint = new URL(
+        `/api/issues/${encodeURIComponent(projectName.trim())}`,
+        window.location.href
+      )
+    apiEndpoint.searchParams.set('index', index)
+
+    const response = await fetch(apiEndpoint.href),
       result = await response.json()
 
     if (typeof result?.error !== 'string' && Object.keys(result).length > 0) {
@@ -147,13 +150,35 @@ export default function Issue() {
         result = await response.json()
 
       setData(JSON.stringify(result, null, 2))
+      setIssueToUpdate({})
     } catch (err) {
       setData(
         JSON.stringify({ error: 'could not complete the request' }, null, 2)
       )
+      setIssueToUpdate({})
     }
   }
-  async function deleteIssue(event, projectName, issueIndex) {}
+  async function deleteIssue(event) {
+    event.preventDefault()
+
+    const [projectName, index] = Array.from(
+        // @ts-ignore
+        deleteIssueFieldset.current.children
+      ).map(labelNode => labelNode.childNodes[2].value),
+      apiEndpoint = new URL(
+        `/api/issues/${encodeURIComponent(projectName.trim())}`,
+        window.location.href
+      )
+    apiEndpoint.searchParams.set('index', index)
+    setData(JSON.stringify({ message: 'deleting issue...' }, null, 2))
+
+    const response = await fetch(apiEndpoint.href, {
+        method: 'DELETE',
+      }),
+      result = await response.json()
+
+    setData(JSON.stringify(result, null, 2))
+  }
   const submitFields = [
       {
         tag: 'input',
@@ -226,8 +251,9 @@ export default function Issue() {
     projectNameOwner = useRef(null),
     issueFilters = useRef(null),
     submitIssueFields = useRef(null),
-    issueIndexForm = useRef(null),
+    updateIssueFieldset = useRef(null),
     updateIssueForm = useRef(null),
+    deleteIssueFieldset = useRef(null),
     [data, setData] = useState(
       JSON.stringify(
         { message: 'submit a form to see its result here' },
@@ -431,29 +457,36 @@ export default function Issue() {
 
         <h3 className={styles.title}>Update Issue</h3>
         {/* @ts-ignore */}
-        <form
-          ref={issueIndexForm}
-          className={styles.form}
-          onSubmit={fetchIssueToUpdate}
-        >
-          <input
-            type='text'
-            name='project'
-            placeholder='*Project'
-            title='Project Title'
-            required
-          />
-          <br />
-          <input
-            type='number'
-            min='0'
-            step='1'
-            name='issue-name'
-            placeholder='*Issue Index'
-            title='Issue Index'
-            required
-          />
-          <br />
+        <form className={styles.form} onSubmit={fetchIssueToUpdate}>
+          <fieldset
+            ref={updateIssueFieldset}
+            className={`${styles.fieldset} ${styles['flex-grid']}`}
+          >
+            <label>
+              Project Of Issue To Update
+              <br />
+              <input
+                type='text'
+                name='project'
+                placeholder='*Project'
+                title='Project Title'
+                required
+              />
+            </label>
+            <label>
+              Index Of Issue To Update
+              <br />
+              <input
+                type='number'
+                min='0'
+                step='1'
+                name='issue-name'
+                placeholder='*Issue index'
+                title='Issue Index'
+                required
+              />
+            </label>
+          </fieldset>
           <button type='submit'>Fetch Issue To Update</button>
         </form>
 
@@ -530,9 +563,33 @@ export default function Issue() {
         </div>
 
         <h3 className={styles.title}>Delete Issue</h3>
-        <form className={styles.form} onSubmit={event => ''}>
-          <input type='text' name='_id' placeholder='*Issue Id' required />
-          <br />
+        <form className={styles.form} onSubmit={deleteIssue}>
+          <fieldset
+            ref={deleteIssueFieldset}
+            className={`${styles.fieldset} ${styles['flex-grid']}`}
+          >
+            <label>
+              Project Of Issue To Delete:
+              <br />
+              <input
+                type='text'
+                maxLength={50}
+                placeholder='*project'
+                required
+              />
+            </label>
+            <label>
+              Index Of Issue To Delete
+              <br />
+              <input
+                type='number'
+                min={0}
+                step={1}
+                placeholder='*issue index'
+                required
+              />
+            </label>
+          </fieldset>
           <button type='submit'>Delete Issue</button>
         </form>
 
