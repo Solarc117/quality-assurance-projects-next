@@ -215,6 +215,7 @@ export default class IssueHandler {
 
     postResult = await IssuesDAO.createProject(project)
 
+    // @ts-ignore
     res.status(postResult?.error ? 500 : 200).json(postResult)
   }
 
