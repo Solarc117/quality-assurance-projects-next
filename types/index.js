@@ -17,3 +17,11 @@
  * @property {string} owner The project owner.
  * @property {[Issue]} issues An array containing Issue objects for each issue in the project.
  */
+
+/**
+ * @typedef {string[][]} Rows
+ */
+
+/**
+ * @typedef {Set<string>[]} ValidNumbers
+ */

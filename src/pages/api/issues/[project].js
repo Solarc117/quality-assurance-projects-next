@@ -1,6 +1,6 @@
 import IssueHandler from '../../../modules/issue-tracker/issue-handler.js'
 
-export default function project(req, res) {
+export default function projectAPI(req, res) {
   switch (req.method) {
     case 'GET':
       IssueHandler.getProjectIssues(req, res)
