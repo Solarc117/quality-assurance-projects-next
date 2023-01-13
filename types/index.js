@@ -25,3 +25,11 @@
 /**
  * @typedef {Set<string>[]} ValidNumbers
  */
+
+/**
+ * @typedef Book
+ * @property {ObjectId} _id
+ * @property {string} title
+ * @property {number} commentcount An Integer.
+ * @property {[string]} comments An array containing comment strings.
+ */

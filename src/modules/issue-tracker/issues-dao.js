@@ -27,8 +27,8 @@ export default class IssuesDAO {
         .collection(COLLECTION)
 
       log(`IssuesDAO connected to ${COLLECTION} collection`)
-    } catch (err) {
-      error(`unable to connect IssuesDAO to ${COLLECTION} collection:`, err)
+    } catch (error) {
+      error(`unable to connect IssuesDAO to ${COLLECTION} collection:`, error)
     }
   }
 

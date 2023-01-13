@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import SudokuSolver from './solver.js'
+import SudokuSolver from './sudoku-solver.js'
 
 /**
  * @param {string} sudokuString
