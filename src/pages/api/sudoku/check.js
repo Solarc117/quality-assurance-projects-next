@@ -1,4 +1,4 @@
-import SudokuHandler from '../../../modules/sudoku-solver/handler.js'
+import SudokuHandler from '../../../modules/sudoku-solver/sudoku-handler.js'
 
 export default function checkEndpoint(req, res) {
   switch (req.method) {

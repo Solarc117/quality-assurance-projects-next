@@ -151,7 +151,7 @@ export default class LibraryDAO {
   /**
    * @description Drops the currently connected collection.
    * @async
-   * @returns {Prokmise<object | boolean>} The result of the drop operation, or an object containing an err property in the case of a server err.
+   * @returns {Promise<object | boolean>} The result of the drop operation, or an object containing an err property in the case of a server err.
    */
   static async deleteAll() {
     if (!DB) await this.connect()
