@@ -64,7 +64,7 @@ export default class LibraryHandler {
    */
   static async addComment(req, res) {
     const {
-      params: { _id },
+      query: { _id },
       body: { comment },
     } = req
 

@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 export default function Library() {
   function deleteAll(event) {
     event.preventDefault()
   }
+  const [sampleBook_Id, setSampleBook_Id] = useState('')
 
   return (
     <main>
@@ -16,13 +17,17 @@ export default function Library() {
             <input type='text' name='title' />
           </label>
           <br />
-          <input type='submit' value='Submit' />
+          <button type='submit'>Post book</button>
         </form>
-        <form method='post' className='border'>
+        <form action={`/api/books/${sampleBook_Id}`} method='post' className='border'>
           <h4>Test post to /api/books/:_id</h4>
           <label>
-            BookId to comment on
-            <input type='text' />
+            Id of book to comment on
+            <input
+              type='text'
+              value={sampleBook_Id}
+              onChange={({ target: { value } }) => setSampleBook_Id(value)}
+            />
           </label>
           <br />
           <label>
@@ -30,7 +35,7 @@ export default function Library() {
             <input type='text' name='comment' />
           </label>
           <br />
-          <input type='submit' value='Submit' />
+          <button type='submit'>Post comment</button>
         </form>
       </div>
       <hr />
@@ -50,7 +55,7 @@ export default function Library() {
           <p id='detailTitle'>Select a book to see its details and comments</p>
           <ol id='detailComments'></ol>
         </div>
-        <button type='submit' onSubmit={deleteAll} value='Delete all books' /> 
+        <button type='submit' onSubmit={deleteAll} value='Delete all books' />
       </div>
     </main>
   )
