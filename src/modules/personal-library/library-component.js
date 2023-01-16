@@ -1,13 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 
 export default function Library() {
   async function submitBook(event) {
     event.preventDefault()
+
+    // @ts-ignore
+    const book = new URLSearchParams(new FormData(newBookForm.current))
+
+    let result
+    try {
+      const response = await fetch('/api/books', {
+        method: 'POST',
+        body: book,
+      })
+      result = await response.json()
+    } catch (error) {
+      alert('could not post book - please try again')
+      console.error(error)
+    }
+
+    // Might do something with the result object, or might just fetch all books and display them further down the page.
   }
   function deleteAll(event) {
     event.preventDefault()
   }
-  const [sampleBook_Id, setSampleBook_Id] = useState('')
+  const [sampleBook_Id, setSampleBook_Id] = useState(''),
+    newBookForm = useRef(null)
 
   return (
     <main>
@@ -22,7 +40,11 @@ export default function Library() {
           <br />
           <button type='submit'>Post book</button>
         </form>
-        <form action={`/api/books/${sampleBook_Id}`} method='post' className='border'>
+        <form
+          action={`/api/books/${sampleBook_Id}`}
+          method='post'
+          className='border'
+        >
           <h4>Test post to /api/books/:_id</h4>
           <label>
             Id of book to comment on
@@ -44,7 +66,12 @@ export default function Library() {
       <hr />
       <section id='sampleui'>
         <h2>Sample Front-End</h2>
-        <form onSubmit={submitBook} id='newBookForm' className='border'>
+        <form
+          ref={newBookForm}
+          onSubmit={submitBook}
+          id='newBookForm'
+          className='border'
+        >
           <label>
             New Book Title
             <input type='text' name='title' placeholder='Moby Dick' />
