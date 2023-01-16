@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from '../../styles/Sudoku.module.css'
+import styles from '../../../styles/Sudoku.module.css'
 
 export default function Sudoku() {
   async function check(event) {

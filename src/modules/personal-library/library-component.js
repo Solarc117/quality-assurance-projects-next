@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 
 export default function Library() {
+  async function submitBook(event) {
+    event.preventDefault()
+  }
   function deleteAll(event) {
     event.preventDefault()
   }
@@ -8,7 +11,7 @@ export default function Library() {
 
   return (
     <main>
-      <div id='sampleposting'>
+      <section id='sampleposting'>
         <h2>Test API responses</h2>
         <form action='/api/books' method='post' className='border'>
           <h4>Test post to /api/books</h4>
@@ -37,11 +40,11 @@ export default function Library() {
           <br />
           <button type='submit'>Post comment</button>
         </form>
-      </div>
+      </section>
       <hr />
-      <div id='sampleui'>
+      <section id='sampleui'>
         <h2>Sample Front-End</h2>
-        <form id='newBookForm' className='border'>
+        <form onSubmit={submitBook} id='newBookForm' className='border'>
           <label>
             New Book Title
             <input type='text' name='title' placeholder='Moby Dick' />
@@ -56,7 +59,7 @@ export default function Library() {
           <ol id='detailComments'></ol>
         </div>
         <button type='submit' onSubmit={deleteAll} value='Delete all books' />
-      </div>
+      </section>
     </main>
   )
 }

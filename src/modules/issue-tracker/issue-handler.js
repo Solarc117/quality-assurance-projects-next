@@ -1,7 +1,7 @@
 import '../../../types/index.js'
 import sanitize from 'mongo-sanitize'
 import { ObjectId } from 'mongodb'
-import IssuesDAO from './issues-dao.js'
+import IssuesDAO from './issue-dao.js'
 
 export default class IssueHandler {
   /**

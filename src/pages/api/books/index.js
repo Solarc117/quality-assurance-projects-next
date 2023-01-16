@@ -1,4 +1,4 @@
-import LibraryHandler from '../../../modules/personal-library/library-handler'
+import LibraryHandler from '../../../modules/personal-library/library-handler.js'
 
 export default function booksEndpoint(req, res) {
   switch (req.method) {
