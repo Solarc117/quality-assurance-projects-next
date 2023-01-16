@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import styles from '../../styles/Issues.module.css'
+import styles from '../../../styles/Issues.module.css'
 
 export default function Issue() {
   function gatherValues(values, node) {
