@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb'
+;import { ObjectId } from 'mongodb'
 import clientPromise from '../../../lib/mongodb.js'
 import '../../../types/index.js'
 
@@ -11,7 +11,6 @@ let DB
 export default class LibraryDAO {
   /**
    * @description Impure; attempts to assign the "issue-tracker" db's "owners" collection to the global "owners" variable, if the global variable is undefined; logs a message if a connection is already established.
-   * @async
    * @returns {Promise<void>}
    */
   static async connect() {
@@ -33,7 +32,6 @@ export default class LibraryDAO {
 
   /**
    * @description Attemps to fetch all books from the current collection.
-   * @async
    * @returns {Promise<object | Array>} The result of the find operation.
    */
   static async getBooks() {
@@ -53,7 +51,6 @@ export default class LibraryDAO {
 
   /**
    * @description Attempts to post the received book to the currently connected collection.
-   * @async
    * @param {Book} book The book to post.
    * @returns {Promise<object>} The result of the insert operation.
    */
@@ -74,7 +71,6 @@ export default class LibraryDAO {
   /**
    * @description Attempts to fetch a single book document from the connected collection, using its _id.
    * @param {string} _id The id of the book to fetch.
-   * @async
    * @returns {Promise<object>} The book document, or an empty object if no document was found.
    */
   static async getBookById(_id) {
@@ -96,7 +92,6 @@ export default class LibraryDAO {
 
   /**
    * @description Appends the passed comment to the comments array of the book with the passed id, and increments commentcount.
-   * @async
    * @param {string} _id The id of the book to append to.
    * @param {string} comment The comment to append.
    * @returns {Promise<object>} The result of the update operation.
@@ -129,7 +124,6 @@ export default class LibraryDAO {
 
   /**
    * @description Attempts to delete a single book from the database using its _id.
-   * @async
    * @param {string} _id The _id of the book to delete.
    * @returns {Promise<object>} The result of the delete operation.
    */
@@ -150,7 +144,6 @@ export default class LibraryDAO {
 
   /**
    * @description Drops the currently connected collection.
-   * @async
    * @returns {Promise<object | boolean>} The result of the drop operation, or an object containing an err property in the case of a server err.
    */
   static async deleteAll() {
@@ -165,6 +158,24 @@ export default class LibraryDAO {
         return log(`${COLLECTION} collection does not exist`)
 
       error(`unable to drop ${COLLECTION} collection:`, err)
+      return { error: err.message }
+    }
+  }
+
+  /**
+   * @description Attempts to fetch a book from the database using its title property.
+   * @param {string} title 
+   * @returns {Promise<object | null>}
+   */
+  static async #getBookByTitle(title) {
+    if (!DB) await this.connect()
+
+    try {
+      const getResult = await DB.findOne({ title })
+
+      return getResult
+    } catch (err) {
+      error(`unable to get book from ${COLLECTION} collection,` err)
       return { error: err.message }
     }
   }
